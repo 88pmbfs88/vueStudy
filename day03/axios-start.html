@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+
+    <script src="../axios.min.js"></script>
+    <script>
+        // axios.get("http://localhost:3000/posts")
+        //     .then((res) => {
+        //         // console.info(res);
+        //         const { status, data } = res;
+        //         if (status === 200) {
+        //             console.info(data)
+        //         }
+        //     })
+        //     .catch((err) => {
+
+        //     })
+
+        // axios.post("http://localhost:3000/posts", { author: "gcgc", title: "titi" })
+        //     .then((res) => {
+        //         // console.info(res);
+        //         const { status, data } = res;
+        //         console.info(status)
+
+        //     })
+        // axios.put("http://localhost:3000/posts/2", { author: "lplp", title: "lele" })
+        //     .then((res) => {
+        //         // console.info(res);
+        //         const { status, data } = res;
+        //         console.info(status)
+
+        //     })
+        axios.put("http://localhost:3000/posts/2")
+            .then((res) => {
+                // console.info(res);
+                const { status, data } = res;
+                console.info(status)
+
+            })
+    </script>
+</body>
+
+</html>

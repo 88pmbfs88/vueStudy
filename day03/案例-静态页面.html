@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #app {
+            width: 600px;
+            margin: 10px auto;
+        }
+
+        .tb {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .tb th {
+            background-color: #0094ff;
+            color: white;
+        }
+
+        .tb td,
+        .tb th {
+            padding: 5px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        .add {
+            padding: 5px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="add">
+            品牌名称:
+            <input type="text" v-model="itemname" v-focus>
+            <input :disabled="itemname.length===0" type="button" value="添加" @click="addItem()">
+        </div>
+
+        <div class="add">
+            品牌名称:
+            <input type="text" placeholder="请输入搜索条件">
+        </div>
+
+        <div>
+            <table class="tb">
+                <tr>
+                    <th>编号</th>
+                    <th>品牌名称</th>
+                    <th>创立时间</th>
+                    <th>操作</th>
+                </tr>
+                <tr v-for="(v,i) in list">
+                    <td>{{v.id}}</td>
+                    <td>{{v.name}}</td>
+                    <td>{{v.date | fmtDate}}</td>
+                    <td>
+                        <a href="#" @click.prevent="deleItem(i)">删除</a>
+                    </td>
+                </tr>
+                <tr v-if="list.length===0">
+                    <td colspan="4">没有品牌数据</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="../vue.js"></script>
+    <script src="../moment.js"></script>
+    <script src="../axios.min.js"></script>
+
+    <script>
+
+        // 全局过滤器-处理日期格式
+        Vue.filter('fmtDate', (v) => {
+            // moment
+            return moment(v).format('YYYY-MM-DD hh:mm:ss')
+        })
+
+        // 全局自定义指令-获取焦点
+        Vue.directive('focus', {
+            inserted(el) {
+                el.focus()
+            }
+        })
+
+        new Vue({
+            el: '#app',
+            data: {
+                // list: list
+                // ES6 新写法 当key和value名字一样
+                list: [],
+                // 添加输入框所绑定的数据
+                itemname: ''
+            },
+            mounted() {
+                this.getItemList()
+            },
+
+            methods: {
+                // 删除商品
+                deleItem(index) {
+                    axios.delete("http://localhost:3000/posts/" + index)
+                        .then((res) => {
+                            const { status, data } = res
+                            if (status == 200) {
+                                this.getItemList()
+                            }
+                        })
+                },
+                // 添加商品
+                addItem() {
+                    axios.post("http://localhost:3000/posts", {
+                        name: this.itemname,
+                        date: new Date()
+
+                    })
+                    .then((res) => {
+                        const { status, data } = res
+                        if (status == 201) {
+                            this.getItemList()
+                        } 
+                    })
+                },
+
+                getItemList() {
+                    axios.get("http://localhost:3000/posts")
+                        .then((res) => {
+                            const { status, data } = res
+
+                            if (status == 200) {
+                                this.list = data
+                            } else {
+                                this.list = []
+                            }
+                        })
+                }
+
+            },
+            computed: {
+
+
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+<!-- 
+一. 列表渲染
+1. 找到要循环遍历的标签结构 tr
+2. 确定要使用的指令 v-for="(item,i) in 容器"
+3. 在data中提供v-for要使用的数组
+4. 在视图中使用数据{{item}}等
+
+二. 处理无数据时的渲染
+1. 找到要渲染的标签 "没有品牌数据"
+2. 确定要用的指令 v-if=""
+3. 在data中声明v-if要使用的数据 布尔类型
+4. v-if的条件
+
+三. 添加商品
+1.  找到商品名称的输入框 input -> v-model绑定数据
+2. 找到添加按钮 绑定事件 ->  @click=""
+3. 在methods中提供的addItem()方法
+4. 向list数组中添加数据
+
+四. 删除商品 
+1. 找到删除按钮 @click="deleItem()"
+2. 在methods 提供deleItem()方法
+3. 在deleItem方法中 从list数组中移除元素
+
+五. 日期格式处理->过滤器
+
+ -->
